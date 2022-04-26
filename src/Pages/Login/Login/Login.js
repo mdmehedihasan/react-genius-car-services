@@ -3,6 +3,7 @@ import { Button, Form } from 'react-bootstrap';
 import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { useLocation, useNavigate } from 'react-router-dom';
 import auth from '../../../firebase.init';
+import SocialLogin from '../SocialLogin/SocialLogin';
 
 const Login = () => {
     const emailRef = useRef('');
@@ -35,6 +36,16 @@ const Login = () => {
         navigate(from, { replace: true });
     }
 
+    let errorOccur;
+
+    if (error) {
+
+        errorOccur = <div>
+            <p className='text-danger'>Error: {error?.message}</p>
+        </div>
+
+    }
+
 
 
     return (
@@ -50,15 +61,16 @@ const Login = () => {
                     <Form.Label>Password</Form.Label>
                     <Form.Control ref={passwordRef} type="password" placeholder="Password" required />
                 </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                    <Form.Check type="checkbox" label="Check me out" />
-                </Form.Group>
+
                 <Button variant="primary" type="submit">
-                    Submit
+                    Log In
                 </Button>
             </Form>
+            {errorOccur}
             <p className='text-start mt-2'>New to Genius Car? <span className='text-danger' onClick={navigateRegister} role="button" tabindex="0">Register Now</span> </p>
+            <SocialLogin></SocialLogin>
         </div>
+
     );
 };
 
