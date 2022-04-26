@@ -1,9 +1,12 @@
 import React, { useRef } from 'react';
 import { Button, Form } from 'react-bootstrap';
-import { useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
+import { useSendPasswordResetEmail, useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { useLocation, useNavigate } from 'react-router-dom';
 import auth from '../../../firebase.init';
 import SocialLogin from '../SocialLogin/SocialLogin';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { sendPasswordResetEmail } from 'firebase/auth';
 
 const Login = () => {
     const emailRef = useRef('');
@@ -32,6 +35,10 @@ const Login = () => {
         error,
     ] = useSignInWithEmailAndPassword(auth);
 
+
+    const [sendPasswordResetEmail, sending] = useSendPasswordResetEmail(auth);
+
+
     if (user) {
         navigate(from, { replace: true });
     }
@@ -43,6 +50,17 @@ const Login = () => {
         errorOccur = <div>
             <p className='text-danger'>Error: {error?.message}</p>
         </div>
+    }
+    const resetPassword = async () => {
+        const email = emailRef.current.value;
+        if (email) {
+            await sendPasswordResetEmail(email);
+            toast('Sent Email');
+        }
+        else {
+            toast('please enter your email');
+        }
+
 
     }
 
@@ -68,7 +86,10 @@ const Login = () => {
             </Form>
             {errorOccur}
             <p className='text-start mt-2'>New to Genius Car? <span className='text-danger' onClick={navigateRegister} role="button" tabindex="0">Register Now</span> </p>
+
+            <p>Forgot password? <button onClick={resetPassword} className='text primary'>reset</button></p>
             <SocialLogin></SocialLogin>
+            <ToastContainer />
         </div>
 
     );
