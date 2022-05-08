@@ -8,7 +8,7 @@ const ManageServices = () => {
     const handleDelete = (id) => {
         const proceed = window.confirm('are you sure?');
         if (proceed) {
-            const url = `http://localhost:5000/service/${id}`
+            const url = `https://glacial-dawn-22102.herokuapp.com/service/${id}`
             fetch(url, {
                 method: 'DELETE'
             })
